@@ -1,0 +1,135 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.hint {
+    margin-top: 50px;
+    font-size: 1.5rem;
+}
+
+.puzzle {
+    margin-top: 20px;
+    display: flex;
+    grid-template-columns: repeat(5, 100px);
+    grid-gap: 10px;
+    justify-content: right;
+}
+
+.box {
+    height: 50px;
+    width: 100px;
+    background-color: #333;
+    color: transparent;
+    font-size: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Initially Hidden Result Box */
+.result-box {
+    margin: auto auto;
+    height: 50px;
+    width: 540px;
+    background-color: #444;
+    color: red;
+    /* Default to red if not correct */
+    font-size: 16px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+/* Flag Fragments and Noise (Initially Hidden) */
+.box ::after {
+    content: "";
+    display: none;
+}
+
+.result-box::after {
+    content: attr(data-flag);
+    /* Display the flag content dynamically */
+    display: none;
+    color: red;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* Flag Fragments */
+.box-4::after {
+    content: "\0044\0044\0043";
+}
+
+.box-9::after {
+    content: "\007B\0043\0035";
+}
+
+.box-6::after {
+    content: "\0035\005F\0031";
+}
+
+.box-2::after {
+    content: "\0035\005F\0048";
+}
+
+.box-10::after {
+    content: "\0034\0052\0044";
+}
+
+.box-7::after {
+    content: "\005F\004D\0034";
+}
+
+.box-5::after {
+    content: "\004E\005F\0035";
+}
+
+.box-1::after {
+    content: "\004B\0031\0038";
+}
+
+.box-8::after {
+    content: "\0031\0044\0031";
+}
+
+.box-3::after {
+    content: "\007D\0020\0020";
+}
+
+.box-11::after {
+    content: "\0034\0034\0034";
+}
+
+.box-15::after {
+    content: "\0039\004B\0038";
+}
+
+.box-12::after {
+    content: "\0042\0043\0033";
+}
+
+.box-13::after {
+    content: "\005A\0035\0034";
+}
+
+.box-17::after {
+    content: "\0043\0034\0032";
+}
+
+/* Visible Only with align-correct */
+.align-correct .box::after {
+    display: block;
+    color: red;
+    font-size: 16px;
+    text-align: center;
+}

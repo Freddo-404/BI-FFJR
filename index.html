@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Obfuscation Puzzle</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="hint">Deobfuscate the chaos! <br>
+            Arrange the HTML class boxes in the correct order based on their CSS <br>
+            to reveal the hidden flag.</div>
+        <div class="puzzle align-correct">
+            <div class="box box-4"></div>
+            <div class="box box-9"></div>
+            <div class="box box-6"></div>
+            <div class="box box-2"></div>
+            <div class="box box-10"></div>
+            <div class="box box-7"></div>
+            <div class="box box-5"></div>
+            <div class="box box-1"></div>
+            <div class="box box-8"></div>
+            <div class="box box-3"></div>
+            <div class="box box-5"></div>
+            <div class="box box-1"></div>
+            <div class="box box-11"></div>
+            <div class="box box-17"></div>
+            <div class="box box-3"></div>
+            <div class="result-box" data-flag=""></div> <!-- Flag will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const puzzle = document.querySelector('.puzzle');
+        const resultBox = document.querySelector('.result-box');
+        const correctHash = "2643e1d88572f77df01a77da0c3752c1f173b4618ab443db60660fac4a05b023"; // SHA-256 of the flag
+        let hasShownAlert = false; // Ensure the alert is shown only once
+
+        // Function to compute SHA-256
+        async function computeSHA256(message) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+        }
+
+        const updateFlag = async () => {
+            const flag = Array.from(puzzle.querySelectorAll('.box'))
+                .map((box) => getComputedStyle(box, '::after').content.replace(/['"]/g, '') || '')
+                .join('') // Join all the content from the boxes
+                .slice(0, 28); // Take only the first 28 characters
+            resultBox.setAttribute('data-flag', flag);
+            resultBox.textContent = flag;
+
+            const hash = await computeSHA256(flag);
+            if (hash === correctHash) {
+                resultBox.style.color = "green";
+                if (!hasShownAlert) {
+                    alert('Congratulations! You solved the puzzle!');
+                    hasShownAlert = true; // Prevent multiple alerts
+                }
+            } else {
+                resultBox.style.color = "red";
+                hasShownAlert = false; // Reset alert flag if incorrect
+            }
+        };
+
+        // Observe changes in the puzzle container
+        const observer = new MutationObserver(updateFlag);
+
+        observer.observe(puzzle, { childList: true, subtree: true, characterData: true });
+        updateFlag();
+    </script>
+
+</body>
+
+</html>
